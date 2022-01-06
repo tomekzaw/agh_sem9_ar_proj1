@@ -5,7 +5,7 @@ import numpy as np
 from mpi4py import MPI
 from utils import calculate_interactions_own, calculate_interactions_own_with_buffer
 
-N = 400  # liczba wszystkich gwiazd
+N = 1000  # liczba wszystkich gwiazd
 
 if __name__ == '__main__':
     # rozpoczęcie pomiaru czasu
@@ -56,13 +56,13 @@ if __name__ == '__main__':
 
     # zebranie danych
     interactions = comm.gather(accumulator)
-    if not rank:
+    if rank == 0:
         interactions = np.concatenate(interactions)
 
     # koniec pomiaru czasu
     end_time = time.time()
     duration = end_time - start_time
 
-    checksum = comm.reduce(accumulator.sum(), op=MPI.SUM, root=0)
     if rank == 0:
-        print(interactions.shape, checksum, duration)
+        print(interactions)
+        print(interactions.shape, duration)
