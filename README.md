@@ -6,6 +6,12 @@ python3 gen.py
 python3 test.py
 ```
 
+## TODO
+
+- argparse
+- don't calculate interactions twice in zad2
+- why `(p+1)//2`
+
 ## Lessons Learned
 
 ### Communication
