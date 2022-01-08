@@ -10,7 +10,7 @@ def test_calculate_interaction() -> None:
     star_i = Mi, xi, yi, zi = np.random.random(4)
     star_j = Mj, xj, yj, zj = np.random.random(4)
 
-    denominator = np.sqrt((xj - xi) ** 2 + (yj - yi) ** 2 + (zj - zi) ** 2) ** 3
+    denominator = np.sqrt((xj - xi) ** 2 + (yj - yi) ** 2 + (zj - zi) ** 2) ** 3 + 1e-10
 
     expected = np.array([
         G * Mj * (xi - xj) / denominator,
