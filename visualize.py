@@ -3,12 +3,8 @@ from matplotlib.animation import FuncAnimation, PillowWriter
 import numpy as np
 import seaborn as sns
 
-plt.style.use('dark_background')
-
-plt.rcParams['grid.color'] = 'gray'
-
 fps = 25
-dpi = 300
+dpi = 150
 
 transparent = (1.0, 1.0, 1.0, 0.0)
 
@@ -26,11 +22,13 @@ if __name__ == '__main__':
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
-    ax.set(xlim=xlim, ylim=ylim, zlim=zlim)
-    ax.xaxis.set_pane_color(transparent)
-    ax.yaxis.set_pane_color(transparent)
-    ax.zaxis.set_pane_color(transparent)
+
     fig.tight_layout()
+    fig.patch.set_facecolor('white')
+    ax.set(xlim=xlim, ylim=ylim, zlim=zlim)
+    ax.set_xticklabels([])
+    ax.set_yticklabels([])
+    ax.set_zticklabels([])
 
     def animate(step):
         print(step)
