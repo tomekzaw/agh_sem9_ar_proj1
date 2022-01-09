@@ -89,10 +89,11 @@ if __name__ == '__main__':
         comm.Recv([accumulator_buffer_B, MPI.FLOAT], source=(rank + (p+1) // 2) % p)
         accumulator += accumulator_buffer_B
 
-    # zebranie danych
-    accelerations = comm.gather(accumulator)
+    accelerations = np.empty((p, N // p, 3)) if rank == 0 else None
+    comm.Gather(sendbuf=accumulator, recvbuf=accelerations)
+
     if rank == 0:  # root
-        accelerations = np.concatenate(accelerations)
+        accelerations = accelerations.reshape(N, 3)
         duration = timer() - start_time
 
         print(accelerations)
