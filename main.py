@@ -56,7 +56,7 @@ if __name__ == '__main__':
             accumulator_buffer_B = accumulator_buffer[n:]
 
         # ...oraz akumulator swoich interakcji.
-        interactions = calculate_interactions(stars_own[:, :4], stars_own[:, :4])
+        interactions = calculate_interactions(stars_own[:, :4], stars_own[:, :4], same=True, use_symmetry=zad >= 2)
         masses_own = stars_own[:, 0, np.newaxis]
         accumulator = (interactions * masses_own).sum(axis=1)  # ax, ay, az
 
@@ -78,7 +78,7 @@ if __name__ == '__main__':
                 comm.Recv([accumulator_buffer_B, MPI.FLOAT], source=right)
 
             # 3. oblicza interakcje swoich gwiazd i gwiazd otrzymanych
-            interactions = calculate_interactions(stars_own[:, :4], stars_buffer_B)
+            interactions = calculate_interactions(stars_own[:, :4], stars_buffer_B, same=False)
 
             # 4. dodaje obliczona interakcje do swojego akumulatora
             masses_buffer = stars_buffer_B[:, 0, np.newaxis]

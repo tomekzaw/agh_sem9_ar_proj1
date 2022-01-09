@@ -3,7 +3,7 @@
   "python.formatting.provider": "autopep8",
   "python.formatting.autopep8Args": [
     "--max-line-length",
-    "120",
+    "160",
     "--experimental"
   ]
 }

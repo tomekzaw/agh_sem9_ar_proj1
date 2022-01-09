@@ -1,14 +1,18 @@
-# n-body problem
+# Parallel n-body simulation
+
+![](zad3.gif)
 
 ```
 python3 gen.py
-./run.sh
+./run1.sh
+./run2.sh
 python3 test.py
+./run3.sh
+python3 visualize.py
 ```
 
 ## TODO
 
-- don't calculate own interactions twice in zad2
 - why `(p+1)//2`
 - use `dtype` everywhere
 
