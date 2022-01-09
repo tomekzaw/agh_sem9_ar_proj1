@@ -8,7 +8,7 @@ plt.style.use('dark_background')
 plt.rcParams['grid.color'] = 'gray'
 
 fps = 25
-dpi = 100
+dpi = 300
 
 transparent = (1.0, 1.0, 1.0, 0.0)
 
