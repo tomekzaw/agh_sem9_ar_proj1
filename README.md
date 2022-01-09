@@ -10,6 +10,7 @@ python3 test.py
 
 - don't calculate own interactions twice in zad2
 - why `(p+1)//2`
+- use `dtype` everywhere
 
 ## Lessons Learned
 
@@ -25,3 +26,9 @@ python3 test.py
 
 - `--use-hwthread-cpus`
 - `--oversubscribe`
+
+### Floating point arithmetic
+
+- `dtype`
+- `np.isclose(rtol=..., atol=...)`
+- RuntimeWarning: invalid value encountered in true_divide
