@@ -90,13 +90,11 @@ if __name__ == '__main__':
         accumulator += accumulator_buffer_B
 
     # zebranie danych
-    interactions = comm.gather(accumulator)
+    accelerations = comm.gather(accumulator)
     if rank == 0:  # root
-        interactions = np.concatenate(interactions)
+        accelerations = np.concatenate(accelerations)
+        duration = timer() - start_time
 
-    duration = timer() - start_time
-
-    if rank == 0:  # root
-        # print(interactions)
-        print(interactions.shape, p, duration)
-        np.save(f'interactions_zad{zad}_np{p}.npy', interactions)
+        print(accelerations)
+        print(accelerations.shape, p, duration)
+        np.save(f'interactions_zad{zad}_np{p}.npy', accelerations)
