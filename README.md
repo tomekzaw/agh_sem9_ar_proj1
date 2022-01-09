@@ -8,8 +8,7 @@ python3 test.py
 
 ## TODO
 
-- argparse
-- don't calculate interactions twice in zad2
+- don't calculate own interactions twice in zad2
 - why `(p+1)//2`
 
 ## Lessons Learned

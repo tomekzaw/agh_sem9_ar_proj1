@@ -5,7 +5,7 @@ import numpy as np
 
 from mpi4py import MPI
 from timeit import default_timer as timer
-from utils import calculate_interactions_own, calculate_interactions_own_with_buffer
+from utils import calculate_interactions
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -46,7 +46,9 @@ if __name__ == '__main__':
         accumulator_buffer_B = accumulator_buffer[n:]
 
     # ...oraz akumulator swoich interakcji.
-    accumulator = calculate_interactions_own(stars_own)  # ax, ay, az
+    interactions = calculate_interactions(stars_own, stars_own)
+    masses_own = stars_own[:, 0, np.newaxis]
+    accumulator = (interactions * masses_own).sum(axis=1)  # ax, ay, az
 
     # Każdy z procesów powtarza p-1 razy następujące czynności:
     # Następnie powtarza floor(p/2) razy następujące czynności:
@@ -54,24 +56,27 @@ if __name__ == '__main__':
     for i in range(iters):
 
         # 1. przesyła przechodnią porcję(N/p) gwiazd do lewego sąsiada w pierścieniu procesów
-        comm.Isend([stars_buffer_A, MPI.FLOAT], dest=left, tag=0)
+        comm.Isend([stars_buffer_A, MPI.FLOAT], dest=left)
         if zad == 2:
             # 1. przesyła do lewego sąsiada przechodnią porcję (N/p) gwiazd oraz skojarzony z nimi akumulator przechodni.
-            comm.Isend([accumulator_buffer_A, MPI.FLOAT], dest=left, tag=1)
+            comm.Isend([accumulator_buffer_A, MPI.FLOAT], dest=left)
 
         # 2. odbiera porcję (N/p) gwiazd od prawego sąsiada do swojego bufora przechodniego
-        comm.Recv([stars_buffer_B, MPI.FLOAT], source=right, tag=0)
+        comm.Recv([stars_buffer_B, MPI.FLOAT], source=right)
         if zad == 2:
             # 2. odbiera porcję (N/p) gwiazd oraz skojarzony z nimi akumulator przechodni od prawego sąsiada do swoich buforów
-            comm.Recv([accumulator_buffer_B, MPI.FLOAT], source=right, tag=1)
+            comm.Recv([accumulator_buffer_B, MPI.FLOAT], source=right)
 
         # 3. oblicza interakcje swoich gwiazd i gwiazd otrzymanych
+        interactions = calculate_interactions(stars_own, stars_buffer_B)
+
         # 4. dodaje obliczona interakcje do swojego akumulatora
-        accumulator += calculate_interactions_own_with_buffer(stars_own, stars_buffer_B)
+        masses_buffer = stars_buffer_B[:, 0, np.newaxis]
+        accumulator += (interactions * masses_buffer).sum(axis=1)
 
         if zad == 2 and not (p % 2 == 0 and i == (p // 2) - 1):
             # 5. dodaje obliczone interakcje do bufora przechodniego
-            accumulator_buffer_B += calculate_interactions_own_with_buffer(stars_buffer_B, stars_own)
+            accumulator_buffer_B += (-interactions.transpose(1, 0, 2) * masses_own).sum(axis=1)
 
         # swap buffers
         stars_buffer_A, stars_buffer_B = stars_buffer_B, stars_buffer_A
