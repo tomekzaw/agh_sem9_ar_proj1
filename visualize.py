@@ -13,7 +13,7 @@ if __name__ == '__main__':
 
     steps, nstars, _ = snapshots.shape
 
-    coords = snapshots.reshape(-1, 3).T
+    coords = snapshots[:100, :, :].reshape(-1, 3).T
     mins, maxs = np.min(coords, axis=1), np.max(coords, axis=1)
     c, d = (mins + maxs) / 2, np.max(maxs - mins)
     xlim, ylim, zlim = np.array([c - d / 2, c + d / 2]).T

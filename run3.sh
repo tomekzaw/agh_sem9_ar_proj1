@@ -1,1 +1,1 @@
-mpiexec -n 2 python3 main.py 14 3 && python3 visualize.py
+mpiexec -n 2 python3 main.py 14 3
