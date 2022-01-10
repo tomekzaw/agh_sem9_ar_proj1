@@ -122,12 +122,10 @@ if __name__ == '__main__':
         if zad <= 2:
             accelerations = accelerations.reshape(N, 3)
             duration = timer() - start_time
-            # print(accelerations)
-            print(accelerations.shape, p, duration)
+            print(duration)
             np.save(f'accelerations_zad{zad}_np{p}.npy', accelerations)
         else:
             snapshots = snapshots.transpose(1, 0, 2, 3).reshape(steps, N, 3)
             duration = timer() - start_time
-            # print(snapshots)
-            print(snapshots.shape, p, duration)
+            print(duration)
             np.save('snapshots.npy', snapshots)
