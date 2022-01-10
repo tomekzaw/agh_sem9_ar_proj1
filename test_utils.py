@@ -1,4 +1,6 @@
 import numpy as np
+import pytest
+
 from utils import G, calculate_interaction, calculate_interactions
 
 ci = calculate_interaction
@@ -15,9 +17,9 @@ def test_calculate_interaction() -> None:
     denominator = np.sqrt((xj - xi) ** 2 + (yj - yi) ** 2 + (zj - zi) ** 2) ** 3
 
     expected = np.array([
-        G * (xi - xj) / denominator,
-        G * (yi - yj) / denominator,
-        G * (zi - zj) / denominator,
+        G * (xj - xi) / denominator,
+        G * (yj - yi) / denominator,
+        G * (zj - zi) / denominator,
     ])
 
     actual = calculate_interaction(star_i, star_j)
@@ -25,7 +27,8 @@ def test_calculate_interaction() -> None:
     assert isclose(expected, actual)
 
 
-def test_calculate_interactions() -> None:
+@pytest.mark.parametrize('use_symmetry', [True, False])
+def test_calculate_interactions(use_symmetry: bool) -> None:
     stars_own = star0, star1, star2, star3, star4 = np.random.rand(5, 4)
     stars_buffer = starA, starB, starC = np.random.rand(3, 4)
 
@@ -37,12 +40,13 @@ def test_calculate_interactions() -> None:
         [ci(star4, starA), ci(star4, starB), ci(star4, starC)],
     ])
 
-    actual = calculate_interactions(stars_own, stars_buffer)
+    actual = calculate_interactions(stars_own, stars_buffer, same=False, use_symmetry=use_symmetry)
 
     assert isclose(expected, actual)
 
 
-def test_calculate_interactions_own() -> None:
+@pytest.mark.parametrize('same, use_symmetry', [(True, True), (True, False), (False, False)])
+def test_calculate_interactions_own(same: bool, use_symmetry: bool) -> None:
     stars = star0, star1, star2, star3, star4 = np.random.rand(5, 4)
 
     zero3d = np.array([0, 0, 0])
@@ -55,6 +59,6 @@ def test_calculate_interactions_own() -> None:
         [ci(star4, star0), ci(star4, star1), ci(star4, star2), ci(star4, star3), zero3d],
     ])
 
-    actual = calculate_interactions(stars, stars)
+    actual = calculate_interactions(stars, stars, same=same, use_symmetry=use_symmetry)
 
     assert isclose(expected, actual)
