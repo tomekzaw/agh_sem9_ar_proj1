@@ -3,3 +3,4 @@ mpi4py
 numpy
 pytest
 seaborn
+tqdm

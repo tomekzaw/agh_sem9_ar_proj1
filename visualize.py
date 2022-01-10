@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation, PillowWriter
 import numpy as np
 import seaborn as sns
+from matplotlib.animation import FuncAnimation, PillowWriter
+from tqdm import tqdm
 
 fps = 25
 dpi = 150
@@ -18,7 +19,7 @@ if __name__ == '__main__':
     c, d = (mins + maxs) / 2, np.max(maxs - mins)
     xlim, ylim, zlim = np.array([c - d / 2, c + d / 2]).T
 
-    colors = sns.color_palette('hls', nstars)
+    palette = sns.color_palette('hls', nstars)
 
     fig = plt.figure()
     ax = fig.add_subplot(projection='3d')
@@ -30,11 +31,21 @@ if __name__ == '__main__':
     ax.set_yticklabels([])
     ax.set_zticklabels([])
 
-    def animate(step):
-        print(step)
-        coords = snapshots[step, :, :].T
-        scatter = ax.scatter(*coords, color=colors, marker='.')
-        return scatter,
+    scatter = None
+    colors = []
 
-    ani = FuncAnimation(fig, animate, interval=1000 / fps, frames=steps)
-    ani.save('zad3.gif', dpi=dpi, writer=PillowWriter(fps=fps))
+    with tqdm(total=steps) as pbar:
+        def animate(step):
+            global scatter, colors
+            pbar.n = step
+            pbar.refresh()
+            coords = snapshots[:step, :, :].reshape(-1, 3).T
+            if scatter is not None:
+                scatter.remove()
+            if step:
+                colors.extend(palette)
+            scatter = ax.scatter(*coords, color=colors, marker='.')
+            return scatter,
+
+        ani = FuncAnimation(fig, animate, interval=1000 / fps, frames=steps)
+        ani.save('zad3.gif', dpi=dpi, writer=PillowWriter(fps=fps))
