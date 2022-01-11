@@ -22,7 +22,7 @@ python3 visualize.py
 
 - `send` + `recv` &rarr; `UnpickleError`
 - `send` + `Recv` &rarr; non-compatible due to different protocol
-- `Send` + `Recv` &rarr; blocked for large payloads
+- `Send` + `Recv` &rarr; blocks for large payloads
 - `Isend` + `Recv` + single `np.array` &rarr; Recv overwrites Isend array
 - `Isend` + `Recv` + double buffering &rarr; works like charm
 
@@ -33,6 +33,5 @@ python3 visualize.py
 
 ### Floating point arithmetic
 
-- `dtype`
 - `np.isclose(rtol=..., atol=...)`
 - RuntimeWarning: invalid value encountered in true_divide

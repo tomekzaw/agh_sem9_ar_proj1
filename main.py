@@ -3,6 +3,7 @@
 import argparse
 import numpy as np
 
+from math import ceil
 from mpi4py import MPI
 from timeit import default_timer as timer
 from utils import calculate_interactions
@@ -17,7 +18,7 @@ if __name__ == '__main__':
     N = args.N
     zad = args.zad
 
-    steps = 250 if zad == 3 else 1
+    steps = 25 if zad == 3 else 1
     dt = 10
 
     start_time = timer()
@@ -25,6 +26,8 @@ if __name__ == '__main__':
     comm = MPI.COMM_WORLD
     p = comm.Get_size()
     rank = comm.Get_rank()
+
+    N = ceil(N / p) * p
 
     assert N % p == 0  # TODO: support number of stars indivisible by number of processes
     n = N // p
@@ -121,11 +124,10 @@ if __name__ == '__main__':
     if rank == 0:  # root
         if zad <= 2:
             accelerations = accelerations.reshape(N, 3)
-            duration = timer() - start_time
-            print(duration)
-            np.save(f'accelerations_zad{zad}_np{p}.npy', accelerations)
+            # np.save(f'accelerations_zad{zad}_np{p}.npy', accelerations)
         else:
             snapshots = snapshots.transpose(1, 0, 2, 3).reshape(steps, N, 3)
-            duration = timer() - start_time
-            print(duration)
-            np.save('snapshots.npy', snapshots)
+            # np.save('snapshots.npy', snapshots)
+
+        duration = timer() - start_time
+        print(f'{N},{duration}')
