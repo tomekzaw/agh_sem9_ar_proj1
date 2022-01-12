@@ -57,7 +57,8 @@ def plot(df: pd.DataFrame, metric: str) -> plt.Figure:
 
     ax.set(title=f'Zależność {metrics[metric]} od liczby procesów',
            xlabel='Liczba procesów',
-           ylabel=ylabels[metric])
+           ylabel=ylabels[metric],
+           xticks=range(1, df['np'].max() + 1))
 
     ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
@@ -75,6 +76,7 @@ if __name__ == '__main__':
         df = assign_t1(df)
         df = calculate_metrics(df)
         df = group_data(df)
+        df['np'] = df['np'].astype(int)
 
         for metric in metrics:
             fig = plot(df, metric)
