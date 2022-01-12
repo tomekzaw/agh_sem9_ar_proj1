@@ -18,7 +18,7 @@ if __name__ == '__main__':
     N = args.N
     zad = args.zad
 
-    steps = 25 if zad == 3 else 1
+    steps = 20 if zad == 3 else 1
     dt = 10
 
     start_time = timer()
