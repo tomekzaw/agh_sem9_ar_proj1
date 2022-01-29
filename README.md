@@ -11,11 +11,6 @@ python3 test.py
 python3 visualize.py
 ```
 
-## TODO
-
-- why `(p+1)//2`
-- use `dtype` everywhere
-
 ## Lessons Learned
 
 ### Communication
